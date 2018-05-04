@@ -1,0 +1,7 @@
+1、问题： @Cacheable 无效？
+       解决方法：
+	userRealm中 注入的service 采用懒加载方式
+2、redis缓存中获取数据后还原对象提示classcast异常？
+       解决方法：注释掉devtools,springboot热部署导致
+   
+

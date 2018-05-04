@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="com.study.demo.dao.UserDao">  
+     
+    <resultMap id="userResultMap" type="User">
+		<result property="id" column="id" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="salt" column="salt" />
+		<result property="name" column="name" />
+		<result property="sex" column="sex" />
+		<result property="age" column="age" />
+		<result property="photo" column="photo" />
+		<result property="birthday" column="birthday" />
+		<result property="tel" column="tel" />
+		<result property="email" column="email" />
+		<result property="valid" column="valid" />
+		<result property="creater" column="creater" />
+		<result property="createTime" column="create_time" />
+		<result property="updater" column="updater" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<sql id="userColumns"> 
+			id,
+			username,
+			password,
+			salt,
+			name,
+			sex,
+			age,
+			photo,
+			birthday,
+			tel,
+			email,
+			valid,
+			creater,
+			create_time,
+			updater,
+			update_time
+	</sql>
+	
+	<sql id="query_user_where">
+		<where>
+				<if test="id != null and id !=''">and id = #{id}</if>
+				<if test="username != null and username !=''">and username = #{username}</if>
+				<if test="password != null and password !=''">and password = #{password}</if>
+				<if test="salt != null and salt !=''">and salt = #{salt}</if>
+				<if test="name != null and name !=''">and name = #{name}</if>
+				<if test="sex != null and sex !=''">and sex = #{sex}</if>
+				<if test="age != null and age !=''">and age = #{age}</if>
+				<if test="photo != null and photo !=''">and photo = #{photo}</if>
+				<if test="birthday != null and birthday !=''">and birthday = #{birthday}</if>
+				<if test="tel != null and tel !=''">and tel = #{tel}</if>
+				<if test="email != null and email !=''">and email = #{email}</if>
+				<if test="valid != null and valid !=''">and valid = #{valid}</if>
+				<if test="creater != null and creater !=''">and creater = #{creater}</if>
+				<if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+				<if test="updater != null and updater !=''">and updater = #{updater}</if>
+				<if test="updateTime != null and updateTime !=''">and update_time = #{updateTime}</if>
+		</where>
+	</sql>
+	
+	<select id="getOne" parameterType="java.lang.Long" resultMap="userResultMap">
+		select
+		<include refid="userColumns" />
+		from user
+		where id = #{id}
+	</select>
+	
+	<select id="list" parameterType="java.util.Map" resultMap="userResultMap">
+		SELECT
+		<include refid="userColumns" />
+		FROM
+		user
+		<include refid="query_user_where" />
+		<if test="_start != null and _pageSize != null">limit #{_start},#{_pageSize}</if>
+	</select>
+	
+    <select id="total" parameterType="java.util.Map" resultType="int">
+		SELECT count(1) FROM user
+		<include refid="query_user_where" />
+	</select>
+    
+    <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">  
+        insert into user (
+			<include refid="userColumns" />
+		) 
+		values(
+        	#{id},
+        	#{username},
+        	#{password},
+        	#{salt},
+        	#{name},
+        	#{sex},
+        	#{age},
+        	#{photo},
+        	#{birthday},
+        	#{tel},
+        	#{email},
+        	#{valid},
+        	#{creater},
+			sysdate(),
+        	#{updater},
+        	#{updateTime}
+        )  
+    </insert>  
+    
+    <update id="update" parameterType="User">
+		update user
+		<set>
+			<if test="username != null">
+				username = #{username},
+			</if>
+			<if test="password != null">
+				password = #{password},
+			</if>
+			<if test="salt != null">
+				salt = #{salt},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="sex != null">
+				sex = #{sex},
+			</if>
+			<if test="age != null">
+				age = #{age},
+			</if>
+			<if test="photo != null">
+				photo = #{photo},
+			</if>
+			<if test="birthday != null">
+				birthday = #{birthday},
+			</if>
+			<if test="tel != null">
+				tel = #{tel},
+			</if>
+			<if test="email != null">
+				email = #{email},
+			</if>
+			<if test="valid != null">
+				valid = #{valid},
+			</if>
+			<if test="creater != null">
+				creater = #{creater},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="updater != null">
+				updater = #{updater},
+			</if>
+				update_time = sysdate(),
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from user where
+		id=#{id}
+	</delete>
+      
+</mapper>  

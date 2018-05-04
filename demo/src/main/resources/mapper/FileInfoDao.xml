@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="com.study.demo.dao.FileInfoDao">  
+     
+    <resultMap id="fileInfoResultMap" type="FileInfo">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="newname" column="newName" />
+		<result property="size" column="size" />
+		<result property="md5" column="md5" />
+		<result property="suffixname" column="suffixName" />
+		<result property="uploadtime" column="uploadTime" />
+		<result property="valid" column="valid" />
+		<result property="creater" column="creater" />
+		<result property="createtime" column="createTime" />
+	</resultMap>
+	
+	<sql id="fileInfoColumns"> 
+			id,
+			name,
+			newName,
+			size,
+			md5,
+			suffixName,
+			uploadTime,
+			valid,
+			creater,
+			createTime
+	</sql>
+	
+	<sql id="query_fileInfo_where">
+		<where>
+				<if test="id != null and id !=''">and id = #{id}</if>
+				<if test="name != null and name !=''">and name = #{name}</if>
+				<if test="newname != null and newname !=''">and newName = #{newname}</if>
+				<if test="size != null and size !=''">and size = #{size}</if>
+				<if test="md5 != null and md5 !=''">and md5 = #{md5}</if>
+				<if test="suffixname != null and suffixname !=''">and suffixName = #{suffixname}</if>
+				<if test="uploadtime != null and uploadtime !=''">and uploadTime = #{uploadtime}</if>
+				<if test="valid != null and valid !=''">and valid = #{valid}</if>
+				<if test="creater != null and creater !=''">and creater = #{creater}</if>
+				<if test="createtime != null and createtime !=''">and createTime = #{createtime}</if>
+		</where>
+	</sql>
+	
+	<select id="getOne" parameterType="java.lang.Long" resultMap="fileInfoResultMap">
+		select
+		<include refid="fileInfoColumns" />
+		from file_info
+		where id = #{id}
+	</select>
+	
+	<select id="list" parameterType="java.util.Map" resultMap="fileInfoResultMap">
+		SELECT
+		<include refid="fileInfoColumns" />
+		FROM
+		file_info
+		<include refid="query_fileInfo_where" />
+		<if test="_start != null and _pageSize != null">limit #{_start},#{_pageSize}</if>
+	</select>
+	
+    <select id="total" parameterType="java.util.Map" resultType="int">
+		SELECT count(1) FROM file_info
+		<include refid="query_fileInfo_where" />
+	</select>
+    
+    <insert id="insert" parameterType="FileInfo" useGeneratedKeys="true" keyProperty="id">  
+        insert into file_info (
+			<include refid="fileInfoColumns" />
+		) 
+		values(
+        	#{id},
+        	#{name},
+        	#{newname},
+        	#{size},
+        	#{md5},
+        	#{suffixname},
+        	#{uploadtime},
+        	#{valid},
+        	#{creater},
+        	#{createtime}
+        )  
+    </insert>  
+    
+    <update id="update" parameterType="FileInfo">
+		update file_info
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="newname != null">
+				newName = #{newname},
+			</if>
+			<if test="size != null">
+				size = #{size},
+			</if>
+			<if test="md5 != null">
+				md5 = #{md5},
+			</if>
+			<if test="suffixname != null">
+				suffixName = #{suffixname},
+			</if>
+			<if test="uploadtime != null">
+				uploadTime = #{uploadtime},
+			</if>
+			<if test="valid != null">
+				valid = #{valid},
+			</if>
+			<if test="creater != null">
+				creater = #{creater},
+			</if>
+			<if test="createtime != null">
+				createTime = #{createtime},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from file_info where
+		id=#{id}
+	</delete>
+      
+</mapper>  

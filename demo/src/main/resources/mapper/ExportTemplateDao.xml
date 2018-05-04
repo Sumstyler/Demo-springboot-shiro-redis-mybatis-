@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="com.study.demo.dao.ExportTemplateDao">  
+     
+    <resultMap id="exportTemplateResultMap" type="ExportTemplate">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="fileName" column="file_name" />
+		<result property="newFileName" column="new_file_name" />
+		<result property="exportName" column="export_name" />
+		<result property="creater" column="creater" />
+		<result property="createTime" column="create_time" />
+		<result property="updater" column="updater" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<sql id="exportTemplateColumns"> 
+			id,
+			name,
+			file_name,
+			new_file_name,
+			export_name,
+			creater,
+			create_time,
+			updater,
+			update_time
+	</sql>
+	
+	<sql id="query_exportTemplate_where">
+		<where>
+				<if test="id != null and id !=''">and id = #{id}</if>
+				<if test="name != null and name !=''">and name = #{name}</if>
+				<if test="fileName != null and fileName !=''">and file_name = #{fileName}</if>
+				<if test="newFileName != null and newFileName !=''">and new_file_name = #{newFileName}</if>
+				<if test="exportName != null and exportName !=''">and export_name = #{exportName}</if>
+				<if test="creater != null and creater !=''">and creater = #{creater}</if>
+				<if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+				<if test="updater != null and updater !=''">and updater = #{updater}</if>
+				<if test="updateTime != null and updateTime !=''">and update_time = #{updateTime}</if>
+		</where>
+	</sql>
+	
+	<select id="getOne" parameterType="java.lang.Long" resultMap="exportTemplateResultMap">
+		select
+		<include refid="exportTemplateColumns" />
+		from export_template
+		where id = #{id}
+	</select>
+	
+	<select id="list" parameterType="java.util.Map" resultMap="exportTemplateResultMap">
+		SELECT
+		<include refid="exportTemplateColumns" />
+		FROM
+		export_template
+		<include refid="query_exportTemplate_where" />
+		<if test="_start != null and _pageSize != null">limit #{_start},#{_pageSize}</if>
+	</select>
+	
+    <select id="total" parameterType="java.util.Map" resultType="int">
+		SELECT count(1) FROM export_template
+		<include refid="query_exportTemplate_where" />
+	</select>
+    
+    <insert id="insert" parameterType="ExportTemplate" useGeneratedKeys="true" keyProperty="id">  
+        insert into export_template (
+			<include refid="exportTemplateColumns" />
+		) 
+		values(
+        	#{id},
+        	#{name},
+        	#{fileName},
+        	#{newFileName},
+        	#{exportName},
+        	#{creater},
+			sysdate(),
+        	#{updater},
+        	#{updateTime}
+        )  
+    </insert>  
+    
+    <update id="update" parameterType="ExportTemplate">
+		update export_template
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="fileName != null">
+				file_name = #{fileName},
+			</if>
+			<if test="newFileName != null">
+				new_file_name = #{newFileName},
+			</if>
+			<if test="exportName != null">
+				export_name = #{exportName},
+			</if>
+			<if test="updater != null">
+				updater = #{updater},
+			</if>
+				update_time = sysdate(),
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from export_template where
+		id=#{id}
+	</delete>
+      
+</mapper>  

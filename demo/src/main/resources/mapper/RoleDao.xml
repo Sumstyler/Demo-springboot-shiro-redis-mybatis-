@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.demo.dao.RoleDao">
+
+	<resultMap id="roleResultMap" type="Role">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="valid" column="valid" />
+		<result property="creater" column="creater" />
+		<result property="createTime" column="create_time" />
+		<result property="updater" column="updater" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+	<sql id="roleColumns">
+		id,
+		name,
+		valid,
+		creater,
+		create_time,
+		updater,
+		update_time
+	</sql>
+
+	<sql id="query_role_where">
+		<where>
+			<if test="id != null and id !=''">and id = #{id}</if>
+			<if test="name != null and name !=''">and name = #{name}</if>
+			<if test="valid != null and valid !=''">and valid = #{valid}</if>
+			<if test="creater != null and creater !=''">and creater = #{creater}</if>
+			<if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+			<if test="updater != null and updater !=''">and updater = #{updater}</if>
+			<if test="updateTime != null and updateTime !=''">and update_time = #{updateTime}</if>
+		</where>
+	</sql>
+
+	<select id="getOne" parameterType="java.lang.Long" resultMap="roleResultMap">
+		select
+		<include refid="roleColumns" />
+		from role
+		where id = #{id}
+	</select>
+
+	<select id="list" parameterType="java.util.Map" resultMap="roleResultMap">
+		SELECT
+		<include refid="roleColumns" />
+		FROM
+		role
+		<include refid="query_role_where" />
+		<if test="_start != null and _pageSize != null">limit #{_start},#{_pageSize}</if>
+	</select>
+
+	<select id="total" parameterType="java.util.Map" resultType="int">
+		SELECT count(1) FROM role
+		<include refid="query_role_where" />
+	</select>
+
+	<insert id="insert" parameterType="Role" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into role (
+		<include refid="roleColumns" />
+		)
+		values(
+		#{id},
+		#{name},
+		#{valid},
+		#{creater},
+		sysdate(),
+		#{updater},
+		#{updateTime}
+		)
+	</insert>
+
+	<update id="update" parameterType="Role">
+		update role
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="valid != null">
+				valid = #{valid},
+			</if>
+			<if test="creater != null">
+				creater = #{creater},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="updater != null">
+				updater = #{updater},
+			</if>
+			update_time = sysdate(),
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from role where
+		id=#{id}
+	</delete>
+
+</mapper>  

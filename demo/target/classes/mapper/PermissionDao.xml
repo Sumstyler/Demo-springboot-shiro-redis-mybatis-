@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="com.study.demo.dao.PermissionDao">  
+     
+    <resultMap id="permissionResultMap" type="Permission">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="type" column="type" />
+		<result property="path" column="path" />
+		<result property="percode" column="percode" />
+		<result property="parentid" column="parentid" />
+		<result property="icon" column="icon" />
+		<result property="sid" column="sid" />
+		<result property="valid" column="valid" />
+		<result property="creater" column="creater" />
+		<result property="createTime" column="create_time" />
+		<result property="updater" column="updater" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<sql id="permissionColumns"> 
+			id,
+			name,
+			type,
+			path,
+			percode,
+			parentid,
+			icon,
+			sid,
+			valid,
+			creater,
+			create_time,
+			updater,
+			update_time
+	</sql>
+	
+	<sql id="query_permission_where">
+		<where>
+				<if test="id != null and id !=''">and id = #{id}</if>
+				<if test="name != null and name !=''">and name = #{name}</if>
+				<if test="type != null and type !=''">and type = #{type}</if>
+				<if test="path != null and path !=''">and path = #{path}</if>
+				<if test="percode != null and percode !=''">and percode = #{percode}</if>
+				<if test="parentid != null and parentid !=''">and parentid = #{parentid}</if>
+				<if test="icon != null and sid !=''">and icon = #{icon}</if>
+				<if test="sid != null and sid !=''">and sid = #{sid}</if>
+				<if test="valid != null and valid !=''">and valid = #{valid}</if>
+				<if test="creater != null and creater !=''">and creater = #{creater}</if>
+				<if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+				<if test="updater != null and updater !=''">and updater = #{updater}</if>
+				<if test="updateTime != null and updateTime !=''">and update_time = #{updateTime}</if>
+				<if test="permissionIds != null">
+					and id in 
+					<foreach item="item" index="index" collection="permissionIds" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+		</where>
+	</sql>
+	
+	<select id="getOne" parameterType="java.lang.Long" resultMap="permissionResultMap">
+		select
+		<include refid="permissionColumns" />
+		from permission
+		where id = #{id}
+	</select>
+	
+	<select id="list" parameterType="java.util.Map" resultMap="permissionResultMap">
+		SELECT
+		<include refid="permissionColumns" />
+		FROM
+		permission
+		<include refid="query_permission_where" />
+		<if test="_start != null and _pageSize != null">limit #{_start},#{_pageSize}</if>
+	</select>
+	
+    <select id="total" parameterType="java.util.Map" resultType="int">
+		SELECT count(1) FROM permission
+		<include refid="query_permission_where" />
+	</select>
+    
+    <insert id="insert" parameterType="Permission" useGeneratedKeys="true" keyProperty="id">  
+        insert into permission (
+			<include refid="permissionColumns" />
+		) 
+		values(
+        	#{id},
+        	#{name},
+        	#{type},
+        	#{path},
+        	#{percode},
+        	#{parentid},
+        	#{icon},
+        	#{sid},
+        	#{valid},
+        	#{creater},
+			sysdate(),
+        	#{updater},
+        	#{updateTime}
+        )  
+    </insert>  
+    
+    <update id="update" parameterType="Permission">
+		update permission
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="path != null">
+				path = #{path},
+			</if>
+			<if test="percode != null">
+				percode = #{percode},
+			</if>
+			<if test="parentid != null">
+				parentid = #{parentid},
+			</if>
+			<if test="icon != null">
+				icon = #{icon},
+			</if>
+			<if test="sid != null">
+				sid = #{sid},
+			</if>
+			<if test="valid != null">
+				valid = #{valid},
+			</if>
+			<if test="creater != null">
+				creater = #{creater},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="updater != null">
+				updater = #{updater},
+			</if>
+				update_time = sysdate(),
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from permission where
+		id=#{id}
+	</delete>
+</mapper>  
